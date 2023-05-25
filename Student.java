@@ -48,8 +48,8 @@ public class Student {
         return email;
     }
 
-    public void setPoints(COURSE course, int amountOfPoints) {
-        points.put(course, amountOfPoints);
+    public void addPoints(COURSE course, int amountOfPoints) {
+        points.put(course, amountOfPoints + points.getOrDefault(course, 0));
     }
 
     public Integer getPoints(COURSE course) {

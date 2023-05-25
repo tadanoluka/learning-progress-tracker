@@ -72,10 +72,10 @@ public class TUIHandler {
             }
             Student student = null;
             try {
-                student = studentsDAO.getStudent(Long.parseLong(userInput));
+                student = studentsDAO.getStudent(Long.parseLong(inputSplit[0]));
             } catch (NumberFormatException ignored) {}
             if (student == null) {
-                System.out.printf("No student is found for id=%s%n.", userInput);
+                System.out.printf("No student is found for id=%s%n.", inputSplit[0]);
                 continue;
             }
             try {
@@ -91,7 +91,7 @@ public class TUIHandler {
             }
 
             for (int i = 1; i < 5; i++) {
-                student.setPoints(COURSE.values()[i - 1], Integer.parseInt(inputSplit[i]));
+                student.addPoints(COURSE.values()[i - 1], Integer.parseInt(inputSplit[i]));
             }
             System.out.println("Points updated.");
         }

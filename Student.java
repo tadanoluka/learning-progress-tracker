@@ -1,67 +1,77 @@
 package tracker;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Student {
-    private final long id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final Map<COURSE, Integer> points;
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private final Map<Course, Integer> coursePoints;
+    private final List<Activity> activityList;
 
-    Student(String firstName, String lastName, String email) {
+    public Student(String id, String firstName, String lastName, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.id = this.hashCode();
-
-        points = new HashMap<>();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Student student)) return false;
-        return Objects.equals(email, student.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
-    }
-
-    public long getId() {
-        return id;
+        activityList = new ArrayList<>();
+        coursePoints = new LinkedHashMap<>();
+        for (Course course : Course.values()) {
+            coursePoints.put(course, 0);
+        }
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void addPoints(COURSE course, int amountOfPoints) {
-        points.put(course, amountOfPoints + points.getOrDefault(course, 0));
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Integer getPoints(COURSE course) {
-        return points.get(course);
+    public String getId() {
+        return id;
     }
 
-    public String getAllPointsString() {
-        return "%d points: Java=%d; DSA=%d; Databases=%d; Spring=%d%n"
-                .formatted(id,
-                        points.getOrDefault(COURSE.JAVA, 0),
-                        points.getOrDefault(COURSE.DSA, 0),
-                        points.getOrDefault(COURSE.DATABASE, 0),
-                        points.getOrDefault(COURSE.SPRING, 0));
+    public void setId(String id) {
+        this.id = id;
     }
+
+    public void addCoursePoints(Course course, int points) {
+        int currentPoints = coursePoints.get(course);
+        if (currentPoints < course.getMaxPoints()) {
+            coursePoints.replace(course, Math.min(currentPoints + points, course.getMaxPoints()));
+            activityList.add(new Activity(course,points));
+        }
+    }
+
+    public Map<Course, Integer> getAllPoints() {
+        return coursePoints;
+    }
+
+    public int getPointsByCourse(Course course) {
+        return coursePoints.get(course);
+    }
+
+    public List<Activity> getActivityList() {
+        return activityList;
+    }
+
 }

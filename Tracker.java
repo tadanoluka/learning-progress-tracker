@@ -27,6 +27,7 @@ public class Tracker {
         commands.put("add points", this::addPointsCommand);
         commands.put("find", this::findCommand);
         commands.put("statistics", this::statisticsCommand);
+        commands.put("notify", this::notifyCommand);
     }
 
     public void start() {
@@ -141,6 +142,31 @@ public class Tracker {
                 }
             }
         }
+    }
+
+    private void notifyCommand() {
+        List<Student> unNotifiedStudents = studentService.getUnNotifiedStudents();
+        for (Student student : unNotifiedStudents) {
+            Map<Course, Boolean> courseNotifiedMap = student.getCompletedCoursesNotifyStatusMap();
+            for (Map.Entry<Course, Boolean> entry : courseNotifiedMap.entrySet()) {
+                if (!entry.getValue()) {
+                    student.updateNotifyStatus(entry.getKey());
+                    sendNotification(student, entry.getKey());
+                }
+            }
+        }
+        System.out.printf("Total %d students have been notified.%n", unNotifiedStudents.size());
+    }
+
+    private void sendNotification(Student student, Course course) {
+        System.out.printf("""
+                To: %s
+                Re: Your Learning Progress
+                Hello, %s %s! You have accomplished our %s course!
+                """, student.getEmail(),
+                    student.getFirstName(),
+                    student.getLastName(),
+                    course.getName());
     }
 
     private void back() {

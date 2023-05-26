@@ -69,4 +69,10 @@ public class StudentDatabase {
                         .thenComparing(StudentStatistic::getId))
                 .collect(Collectors.toList());
     }
+
+    public List<Student> getUnNotifiedStudents() {
+        return students.values().stream()
+                .filter(s -> s.getCompletedCoursesNotifyStatusMap().containsValue(false))
+                .toList();
+    }
 }

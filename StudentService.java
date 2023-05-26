@@ -11,6 +11,10 @@ public class StudentService {
         this.database = database;
     }
 
+    public List<Student> getUnNotifiedStudents() {
+        return database.getUnNotifiedStudents();
+    }
+
     public boolean addStudent(String studentInfo) {
         if (studentInfo.isBlank()) {
             System.out.println("Incorrect credentials.");
